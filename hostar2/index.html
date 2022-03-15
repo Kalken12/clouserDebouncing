@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #search {
+            text-align: center;
+            color: red;
+            font-weight: bolder;
+            display: flex;
+            flex-direction: row;
+            background-color: #131927;
+            position: sticky;
+            width: 100%;
+
+        }
+        img{
+            width: 400px;
+            height: 300px;
+            margin-top: 20px;
+        }
+        #main
+        {
+            display: flex;
+            justify-content: space-evenly;
+        }
+
+        #movie {
+            
+            width: 200px;
+            height: 30px;
+            margin: auto;
+            font-size: x-large;
+            text-align: center;
+        }
+
+         #container {
+            height: 200px;
+            width: 210px;
+            border: 1px solid black;
+          
+            overflow: scroll;
+        } 
+
+        #container1 {
+            margin-left: 300px;
+
+        }
+        
+    </style>
+</head>
+
+<body>
+    
+    <div id="main">
+
+  
+    <div id="right">
+       
+        <h1>Search Movies By Name</h1> <input type="text" id="movie" name="movie" oninput="debounce(main,1000)"
+            placeholder="Enter Movie Name">
+
+         <div id="container">
+        </div>
+
+    </div>
+
+
+        <div id="container1">
+        </div>
+    </div>
+</body>
+<script>
+
+    let timerId;
+
+    // let name = 'batman';;
+
+
+    let d;
+    async function myPromise() {
+
+        var name = document.getElementById("movie").value;
+
+        let key = 'f4646442';
+
+        try {
+
+
+            let res = await fetch(`https://www.omdbapi.com/?apikey=${key}&s=${name}`);
+
+            let data = await res.json();
+
+            let array = data.Search;
+
+            console.log(array)
+
+            return array;
+
+
+
+        }
+
+        catch (err) {
+            console.log('error:', err);
+
+        }
+
+    }
+
+
+    function appendData(data1) {
+
+        // document.getElementById("container").innerHTML = "";
+
+        for (var i = 0; i < data1.length; i++) {
+
+            var Title = document.createElement("p");
+            Title.innerText = `${data1[i].Title}`;
+            Title.style.cursor = "pointer";
+
+            document.getElementById("container").append(Title);
+
+            let title = document.querySelectorAll("p");
+          
+            //title.setAttibute("class","pointer")
+        //    title.seta class="pointer">pointer
+       
+           
+            title.forEach(function (ele) {
+
+                ele.addEventListener("click", function () {
+
+                   
+
+                    //  localStorage.setItem('movieT', JSON.stringify(ele.innerText));
+
+
+
+                });
+            });
+
+        }
+
+        document.querySelectorAll("p").forEach(function (ele) {
+
+            ele.addEventListener("click", function () {
+
+
+                document.getElementById("container1").innerHTML = "";
+
+                myPromise1(ele.innerText);
+
+              
+
+
+            });
+        });
+
+
+    }
+
+
+    async function main() {
+        try {
+
+            let data1 = await myPromise();
+
+
+
+            if (data1 === undefined) {
+                return false;
+            }
+
+
+            appendData(data1)
+
+
+
+        }
+
+        catch (err) {
+
+            console.log("err:", err);
+
+        }
+
+    }
+
+    function debounce(func, delay) {
+        if (timerId) {
+            clearTimeout(timerId);
+        }
+
+
+        timerId = setTimeout(function () {
+            func();
+
+        }, delay);
+    }
+
+
+
+
+
+    async function myPromise1(name) {
+
+        let key = 'f4646442';
+
+        try {
+
+            var arr = [];
+
+
+            let res = await fetch(`https://www.omdbapi.com/?apikey=${key}&t=${name}`);
+
+            let data = await res.json();
+
+
+            console.log(data);
+
+
+
+            var div = document.createElement("div");
+
+            var poster = document.createElement("img");
+            poster.src = data.Poster;
+
+            var Title = document.createElement("p");
+            Title.innerText = `Title: ${data.Title}`;
+
+            var cast = document.createElement("p");
+            cast.innerText = `Actors: ${data.Actors}`;
+
+
+            var year = document.createElement("p");
+            year.innerText = `Year: ${data.Year}`;
+
+            var type = document.createElement("p");
+            type.innerText = `Type: ${data.Type}`;
+
+            var rating = document.createElement("p");
+
+
+            rating.innerText = `Imdb Rating: ${data.Ratings[0].Value}`;
+
+            div.append(poster, Title, year, cast, type, rating)
+            document.getElementById("container1").append(div)
+
+
+
+        }
+
+        catch (err) {
+            console.log('error:', err);
+
+            var div = document.createElement("div");
+
+            let img = document.createElement("img")
+            img.src = "https://i.pinimg.com/originals/68/79/69/687969cb54859997824bbd9e19534322.gif";
+
+            let massage = document.createElement("h1")
+            massage.innerText = "Movie not Found";
+
+
+            div.append(img, massage)
+            document.getElementById("container1").append(div);
+        }
+
+    }
+
+
+ 
+
+
+</script>
+
+</html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        
+
+        #container
+        {
+            display: grid;
+            grid-template-columns: repeat(3,0.30fr);
+            margin: auto;
+            gap:20px;
+            justify-content: center;
+            text-align: center;
+            
+        }
+        h1
+        {
+        text-align: center;
+        color:rgb(79, 197, 79)
+        }
+       #container>div
+       {
+           border:1px solid green;
+           box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(29, 221, 42, 0.35) 0px -2px 6px 0px inset;
+           box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 1px, rgba(0, 0, 0, 0.07) 0px 2px 2px, rgba(0, 0, 0, 0.07) 0px 4px 4px, rgba(0, 0, 0, 0.07) 0px 8px 8px, rgba(0, 0, 0, 0.07) 0px 16px 16px;
+           box-shadow: 7px 5px 2px #83a169;
+         
+       }
+       #button
+       {
+           text-align: center;
+           margin: auto;
+           display: block;
+           background-color: rgba(124, 175, 135, 0.678);
+           color: rgb(242, 246, 250);
+           font-size: 15px;
+          border:2px solid rgb(135, 172, 135);
+          border-radius: 20px;
+         
+
+           margin-bottom: 10px;
+           width: 200px;
+           height: 50px;
+
+       }
+    
+    </style>
+</head>
+<body>
+
+   <h1>Trending Movie List</h1> 
+
+   <button onclick="show()" id="button">Click For Trending Movies</button>
+
+   <div id="container">
+</div>
+   
+
+
+</body>
+<script>
+
+function show()
+{
+myPromise();
+
+ async function myPromise()
+ {
+    
+    
+    try{
+
+
+        let res = await fetch(`https://api.themoviedb.org/3/movie/popular?api_key=c74c1b7b36786961ded62170b89d0d7d&language=en-US&page=1`);
+
+    let data = await res.json();
+
+//    let data1 = data.results.
+
+   console.log("data:",data.results)
+   var main = data.results;
+
+  // console.log(main);
+
+   appendData(main);
+
+    }
+
+    catch(err)
+    { 
+       console.log('error:',err);
+
+    }
+    
+ }
+
+}
+ function appendData(main)
+ {
+
+
+    main.map((el)=>{
+    
+        var div = document.createElement("div");
+        let Title =  document.createElement("h3");
+        Title.innerText =  el.title;
+        Title.style.color = "red"
+        var date = document.createElement("h4");
+        date.innerText = `Release Date :${el.release_date}`;
+        date.style.color = "green";
+
+
+        var details = document.createElement("p");
+        details.innerText = `Overview : ${el.overview}`;
+        div.append(Title,date,details);
+
+
+  document.getElementById("container").append(div);
+
+    });
+
+    
+
+ }
+</script>
+</html>

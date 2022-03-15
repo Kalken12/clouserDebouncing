@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #search {
+            text-align: center;
+            color: red;
+            font-weight: bolder;
+            display: flex;
+            flex-direction: row;
+            background-color: #131927;
+ /* position: sticky; */
+            width: 100%;
+            
+
+        }
+
+        #movie {
+           
+            width: 200px;
+            height: 30px;
+            margin: auto;
+            font-size: x-large;
+            text-align: center;
+        }
+
+        #container {
+            height: 200px;
+            width: 210px;
+            border: 1px solid black;
+            border-top: none;
+            overflow: scroll;
+        }
+
+        #main {
+            margin: auto;
+            width: 50%;
+        }
+
+        #container1 {
+            margin-left: 300px;
+
+        }
+    </style>
+</head>
+
+<body>
+    <div id="main">
+        <h1>Search Movies By Name</h1> <input type="text" id="movie" name="movie" oninput="debounce(main,1000)"
+            placeholder="Enter Movie Name">
+
+        <div id="container">
+        </div>
+
+
+       
+
+    </div>
+
+</body>
+<script>
+
+    let timerId;
+    let d;
+    async function myPromise() {
+
+        var name = document.getElementById("movie").value;
+
+        let key = 'f4646442';
+
+        try {
+
+
+            let res = await fetch(`https://www.omdbapi.com/?apikey=${key}&s=${name}`);
+
+            let data = await res.json();
+
+            let array = data.Search;
+
+            console.log(array)
+
+            return array;
+
+
+
+        }
+
+        catch (err) {
+            console.log('error:', err);
+
+          
+        }
+
+    }
+
+
+    function appendData(data1) {
+
+        // document.getElementById("container").innerHTML = "";
+
+        for (var i = 0; i < data1.length; i++) {
+
+            var Title = document.createElement("p");
+            Title.innerText = `${data1[i].Title}`;
+
+
+            document.getElementById("container").append(Title);
+
+            let title = document.querySelectorAll("p");
+            
+
+        }
+
+    }
+
+
+    async function main() {
+        try {
+
+            let data1 = await myPromise();
+             if (data1 === undefined) {
+                return false;
+            }
+
+
+            appendData(data1)
+
+
+
+        }
+
+        catch (err) {
+
+            console.log("err:", err);
+
+        }
+
+    }
+
+    function debounce(func, delay) {
+        if (timerId) {
+            clearTimeout(timerId);
+        }
+
+
+        timerId = setTimeout(function () {
+            func();
+
+        }, delay);
+    }
+
+</script>
+
+</html>
